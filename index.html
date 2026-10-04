@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEND7 Phylogenetic Analysis & Recombinant Cloning Strategy</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            accent: '#2563eb'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+        * {
+            font-style: normal !important; /* Strictly no italics */
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #0f172a;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Scroll reveal class defaults */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom minimal scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Pure clean line dividers */
+        .border-thin {
+            border-color: #e2e8f0;
+        }
+
+        /* Tree node transition */
+        .tree-node-path {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-900 antialiased selection:bg-slate-900 selection:text-white">
+
+    <!-- Reading Progress Bar -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-[2px] bg-slate-900 z-50 transition-all duration-150 w-0"></div>
+
+    <!-- Minimal Header Navigation -->
+    <header class="fixed top-0 left-0 w-full z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="text-sm font-light tracking-widest text-slate-900 uppercase">
+                BEND7 <span class="text-slate-400 font-extralight">| BRAC UNIVERSITY</span>
+            </a>
+            <nav class="hidden lg:flex items-center space-x-6 text-[11px] font-light tracking-wider text-slate-600 uppercase">
+                <a href="#overview" class="hover:text-slate-900 transition-colors">Overview</a>
+                <a href="#dataset" class="hover:text-slate-900 transition-colors">Dataset</a>
+                <a href="#methods" class="hover:text-slate-900 transition-colors">Methods</a>
+                <a href="#trees" class="hover:text-slate-900 transition-colors">Trees</a>
+                <a href="#cloning" class="hover:text-slate-900 transition-colors text-blue-600 font-normal">Cloning Strategy</a>
+                <a href="#structure" class="hover:text-slate-900 transition-colors text-indigo-600 font-normal">3D Structure</a>
+                <a href="#discussion" class="hover:text-slate-900 transition-colors">Discussion</a>
+                <a href="#simulator" class="hover:text-slate-900 transition-colors">Simulator</a>
+            </nav>
+            <a href="https://drive.google.com/drive/folders/1NbPekyy2_9gi9yjUpxR1bwvz7QqhV1Iw?usp=sharing" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="text-xs font-light px-4 py-2 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white transition-all duration-300 tracking-wider uppercase">
+                Project Drive
+            </a>
+        </div>
+    </header>
+
+    <!-- SECTION 1: FULL-PAGE LARGE HERO SECTION -->
+    <section class="min-h-screen w-full flex flex-col items-center justify-center relative px-6 pt-16">
+        <!-- Subtle background architectural lines -->
+        <div class="absolute inset-0 pointer-events-none flex justify-between max-w-7xl mx-auto px-6 opacity-40">
+            <div class="w-[1px] h-full bg-slate-100"></div>
+            <div class="w-[1px] h-full bg-slate-100 hidden sm:block"></div>
+            <div class="w-[1px] h-full bg-slate-100 hidden md:block"></div>
+            <div class="w-[1px] h-full bg-slate-100"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto text-center z-10 space-y-8 py-12">
+            <!-- Metadata tags -->
+            <div class="inline-flex items-center space-x-3 text-xs font-light tracking-widest text-slate-400 uppercase reveal">
+                <span>BTE401 Bioinformatics</span>
+                <span>•</span>
+                <span>Assignment Report & Cloning Design</span>
+                <span>•</span>
+                <span>Dept. of MNS</span>
+            </div>
+
+            <!-- Massive Main Headline -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extralight text-slate-900 tracking-tight leading-[1.08] reveal">
+                Phylogenetics & Cloning of BEND7
+            </h1>
+
+            <p class="text-base sm:text-lg md:text-xl font-light text-slate-500 max-w-3xl mx-auto leading-relaxed tracking-wide reveal">
+                Cross-Lineage Divergence & Expression Vector Engineering in <i>Anas georgica</i> via pET-28a
+            </p>
+
+            <!-- Project Details minimal list -->
+            <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs font-light text-slate-500 pt-4 reveal">
+                <div>Author: <span class="text-slate-900 font-normal">Shadman Shakib</span> (ID: 22136032)</div>
+                <div>Section: <span class="text-slate-900 font-normal">2</span></div>
+                <div>Instructor: <span class="text-slate-900 font-normal">Mahdi Muhammad Moosa</span></div>
+            </div>
+
+            <!-- VIEW PROJECT BUTTON -->
+            <div class="pt-8 reveal">
+                <a href="https://drive.google.com/drive/folders/1NbPekyy2_9gi9yjUpxR1bwvz7QqhV1Iw?usp=sharing" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="inline-flex items-center space-x-4 px-10 py-5 bg-slate-900 text-white text-xs font-light tracking-widest uppercase hover:bg-slate-800 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300">
+                    <span>View Project Drive</span>
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Minimal scroll down hint -->
+        <a href="#overview" class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 text-slate-400 hover:text-slate-900 transition-colors">
+            <span class="text-[10px] font-light uppercase tracking-widest">Scroll to explore</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 animate-bounce"></i>
+        </a>
+    </section>
+
+    <!-- SECTION 2: INTRODUCTION & MOLECULAR OVERVIEW -->
+    <section id="overview" class="py-28 border-t border-slate-100 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+                
+                <!-- Left Title Column -->
+                <div class="md:col-span-4 sticky top-24 reveal">
+                    <span class="text-xs font-light text-slate-400 tracking-widest uppercase block mb-2">01 / Biological Context</span>
+                    <h2 class="text-3xl font-extralight text-slate-900 tracking-tight leading-snug">
+                        The BEN Domain & Functional Repression
+                    </h2>
+                    <p class="mt-4 text-xs font-light text-slate-500 leading-relaxed">
+                        A nuclear transcriptional repressor located on Chromosome 12 (12q23.1) in <i>Homo sapiens</i> and Chromosome 10 in <i>Anas georgica</i>, modulating chromatin accessibility in neurodevelopment.
+                    </p>
+                </div>
+
+                <!-- Right Content Columns -->
+                <div class="md:col-span-8 space-y-12 reveal">
+                    <div class="border-b border-slate-100 pb-10">
+                        <h3 class="text-lg font-light text-slate-900 mb-3 tracking-wide">Gene Architecture & Mechanism</h3>
+                        <p class="text-sm font-light text-slate-600 leading-relaxed">
+                            BEND7 encodes a nuclear protein belonging to the BEN-domain superfamily—a class of chromatin-associated transcriptional regulators characterized by an approximately 90–100 amino-acid BEN domain (named after BANP, E5R, and NAC1). Expressed predominantly in the central nervous system (CNS) and developing embryonic tissues, BEND7 interacts with chromatin remodelling machinery (such as NuRD and SIN3A complexes) to repress gene transcription.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-2">
+                        <div class="border-l border-slate-200 pl-6 space-y-1">
+                            <span class="text-3xl font-extralight text-slate-900 block">~100 aa</span>
+                            <span class="text-xs font-light text-slate-500 uppercase tracking-wider block">BEN Domain Size</span>
+                            <p class="text-xs font-light text-slate-400 pt-1">Highly conserved nucleic acid-binding motif across metazoans.</p>
+                        </div>
+                        <div class="border-l border-slate-200 pl-6 space-y-1">
+                            <span class="text-3xl font-extralight text-slate-900 block">1,647 bp</span>
+                            <span class="text-xs font-light text-slate-500 uppercase tracking-wider block">CDS Length</span>
+                            <p class="text-xs font-light text-slate-400 pt-1">Target coding sequence for expression cloning (~548 aa).</p>
+                        </div>
+                        <div class="border-l border-slate-200 pl-6 space-y-1">
+                            <span class="text-3xl font-extralight text-slate-900 block">5 Taxa</span>
+                            <span class="text-xs font-light text-slate-500 uppercase tracking-wider block">Vertebrate Classes</span>
+                            <p class="text-xs font-light text-slate-400 pt-1">Mammals, Birds, Reptiles, Amphibians, and Ray-finned Fish.</p>
+                        </div>
+                    </div>
+
+                    <!-- BEN Domain Structure Breakdown -->
+                    <div class="pt-6">
+                        <span class="text-xs font-light text-slate-400 tracking-widest uppercase block mb-4">Protein Functional Domain Mapping</span>
+                        <div class="w-full bg-slate-50 border border-slate-200 p-6 space-y-4">
+                            <div class="flex items-center justify-between text-xs font-light text-slate-600">
+                                <span>N-Terminal Region</span>
+                                <span class="font-mono text-slate-900">BEN Domain (~50 - 150 aa)</span>
+                                <span>C-Terminal Region</span>
+                            </div>
+                            <div class="w-full h-8 bg-slate-200 flex rounded-none overflow-hidden relative">
+                                <div class="w-[20%] bg-slate-300 flex items-center justify-center text-[10px] font-mono text-slate-600">1-49</div>
+                                <div class="w-[35%] bg-slate-900 text-white flex items-center justify-center text-[10px] font-mono tracking-wider">BEN DOMAIN (CONSERVED)</div>
+                                <div class="w-[45%] bg-slate-300 flex items-center justify-center text-[10px] font-mono text-slate-600">151-548 aa</div>
+                            </div>
+                            <p class="text-xs font-light text-slate-500 leading-relaxed">
+                                Moderate purifying selection within the BEN domain provides clean phylogenetic signals without saturation effects encountered in rapidly evolving unstructured regions.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: SEQUENCE RETRIEVAL & SAMPLING STRATEGY -->
+    <section id="dataset" class="py-28 border-t border-slate-100 bg-slate-50/50 px-6">
+        <div class="max-w-6xl mx-auto space-y-16">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between reveal space-y-4 md:space-y-0">
+                <div>
+                    <span class="text-xs font-light text-slate-400 tracking-widest uppercase block mb-2">02 / Dataset Compilation</span>
+                    <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                        Sequence Inventory & Sampling Rationale
+                    </h2>
+                </div>
+                <p class="text-xs font-light text-slate-500 max-w-md leading-relaxed">
+                    12 sequences compiled from NCBI GenBank/RefSeq via BLASTP/BLASTX. Maximizing taxonomic breadth across 5 classes including avian target <i>Anas georgica</i>.
+                </p>
+            </div>
+
+            <!-- Taxon Filter Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-4 reveal text-xs font-light">
+                <button onclick="filterDataset('all')" id="filter-all" class="filter-btn border-b-2 border-slate-900 text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">All Taxa (12)</button>
+                <button onclick="filterDataset('Mammalia')" id="filter-mammalia" class="filter-btn border-b-2 border-transparent text-slate-400 hover:text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">Mammalia (6)</button>
+                <button onclick="filterDataset('Aves')" id="filter-aves" class="filter-btn border-b-2 border-transparent text-slate-400 hover:text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">Aves / Anas (2)</button>
+                <button onclick="filterDataset('Reptilia')" id="filter-reptilia" class="filter-btn border-b-2 border-transparent text-slate-400 hover:text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">Reptilia (1)</button>
+                <button onclick="filterDataset('Amphibia')" id="filter-amphibia" class="filter-btn border-b-2 border-transparent text-slate-400 hover:text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">Amphibia (1)</button>
+                <button onclick="filterDataset('Actinopterygii')" id="filter-actinopterygii" class="filter-btn border-b-2 border-transparent text-slate-400 hover:text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">Actinopterygii (1)</button>
+                <button onclick="filterDataset('mRNA')" id="filter-mrna" class="filter-btn border-b-2 border-transparent text-slate-400 hover:text-slate-900 pb-2 px-3 tracking-wider uppercase transition-all">mRNA Sequences (2)</button>
+            </div>
+
+            <!-- Clean Table View -->
+            <div class="overflow-x-auto reveal">
+                <table class="w-full text-left text-xs font-light">
+                    <thead>
+                        <tr class="border-b border-slate-300 text-slate-400 uppercase tracking-widest text-[11px]">
+                            <th class="py-4 px-3 font-normal">Species</th>
+                            <th class="py-4 px-3 font-normal">Accession</th>
+                            <th class="py-4 px-3 font-normal">Class</th>
+                            <th class="py-4 px-3 font-normal">Clade</th>
+                            <th class="py-4 px-3 font-normal">Type</th>
+                            <th class="py-4 px-3 font-normal">Expression / Tissue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sequence-table-body" class="divide-y divide-slate-100 text-slate-700 font-mono text-[11px]">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: PHYLOGENETIC METHODS COMPARISON -->
+    <section id="methods" class="py-28 border-t border-slate-100 px-6">
+        <div class="max-w-6xl mx-auto space-y-16">
+            
+            <div class="max-w-3xl reveal space-y-4">
+                <span class="text-xs font-light text-slate-400 tracking-widest uppercase block">03 / Theoretical Framework</span>
+                <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                    Algorithm Assumptions & Comparison
+                </h2>
+                <p class="text-xs font-light text-slate-500 leading-relaxed">
+                    Three distinct phylogenetic algorithms were applied to evaluate topological robustness, substitution rate variation, and molecular clock sensitivity.
+                </p>
+            </div>
+
+            <!-- Clean minimalist comparison matrix -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-b border-slate-200 divide-y md:divide-y-0 md:divide-x divide-slate-200 reveal">
+                
+                <!-- Method 1: NJ -->
+                <div class="p-8 space-y-6 hover:bg-slate-50/50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">01</span>
+                        <span class="px-2 py-1 bg-slate-100 text-slate-800 text-[10px] uppercase tracking-wider font-light">Distance-Based</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-light text-slate-900">Neighbor-Joining (NJ)</h3>
+                        <p class="text-xs font-light text-slate-400 mt-1">Saitou & Nei (1987)</p>
+                    </div>
+                    <p class="text-xs font-light text-slate-600 leading-relaxed">
+                        Iteratively joins pairs of operational taxonomic units (OTUs) that minimize total branch length under the Q-criterion. Uses JTT substitution matrix correction.
+                    </p>
+                </div>
+
+                <!-- Method 2: UPGMA -->
+                <div class="p-8 space-y-6 hover:bg-slate-50/50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">02</span>
+                        <span class="px-2 py-1 bg-slate-100 text-slate-800 text-[10px] uppercase tracking-wider font-light">Agglomerative</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-light text-slate-900">UPGMA</h3>
+                        <p class="text-xs font-light text-slate-400 mt-1">Sokal & Michener (1958)</p>
+                    </div>
+                    <p class="text-xs font-light text-slate-600 leading-relaxed">
+                        Simple hierarchical clustering based on pairwise arithmetic means. Assumes a strict molecular clock (ultrametric tree), forcing uniform evolutionary rates.
+                    </p>
+                </div>
+
+                <!-- Method 3: MP -->
+                <div class="p-8 space-y-6 hover:bg-slate-50/50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">03</span>
+                        <span class="px-2 py-1 bg-slate-100 text-slate-800 text-[10px] uppercase tracking-wider font-light">Character-Based</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-light text-slate-900">Maximum Parsimony</h3>
+                        <p class="text-xs font-light text-slate-400 mt-1">Fitch (1971)</p>
+                    </div>
+                    <p class="text-xs font-light text-slate-600 leading-relaxed">
+                        Evaluates aligned character columns directly to select the tree requiring the fewest total evolutionary amino-acid changes (parsimony steps).
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 5: INTERACTIVE PHYLOGENETIC TREE VISUALIZER -->
+    <section id="trees" class="py-28 border-t border-slate-100 bg-slate-900 text-white px-6">
+        <div class="max-w-6xl mx-auto space-y-12">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between space-y-6 md:space-y-0">
+                <div>
+                    <span class="text-xs font-light text-slate-400 tracking-widest uppercase block mb-2">04 / Interactive Results</span>
+                    <h2 class="text-3xl font-extralight tracking-tight text-white">
+                        Inferred Phylogenetic Trees
+                    </h2>
+                    <p class="text-xs font-light text-slate-400 mt-2 max-w-lg">
+                        Select an algorithm to explore reconstructed evolutionary tree topologies, branch lengths, and lineage divergence patterns.
+                    </p>
+                </div>
+
+                <!-- Tree Switcher Tabs -->
+                <div class="flex border border-slate-800 p-1 bg-slate-950/60 rounded-none text-xs font-light">
+                    <button onclick="switchTree('nj')" id="tree-tab-nj" class="tree-tab px-5 py-2.5 bg-white text-slate-900 font-normal tracking-wider uppercase transition-all">Neighbor-Joining (NJ)</button>
+                    <button onclick="switchTree('upgma')" id="tree-tab-upgma" class="tree-tab px-5 py-2.5 text-slate-400 hover:text-white tracking-wider uppercase transition-all">UPGMA</button>
+                    <button onclick="switchTree('mp')" id="tree-tab-mp" class="tree-tab px-5 py-2.5 text-slate-400 hover:text-white tracking-wider uppercase transition-all">Max Parsimony (MP)</button>
+                </div>
+            </div>
+
+            <!-- Main Tree Visualization Canvas/Container -->
+            <div class="border border-slate-800 p-8 space-y-8 bg-slate-950/40 relative min-h-[520px] flex flex-col justify-between">
+                
+                <!-- Active Tree Description Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-6 space-y-2 sm:space-y-0">
+                    <div>
+                        <h3 id="tree-title" class="text-lg font-light text-white tracking-wide">Neighbor-Joining (NJ) Tree</h3>
+                        <p id="tree-subtitle" class="text-xs font-light text-slate-400">12 Taxa | Estimated Substitutions per Site (JTT Model Proxy)</p>
+                    </div>
+                    <div id="tree-badge" class="inline-flex items-center space-x-2 text-[11px] font-mono text-emerald-400 border border-emerald-500/30 px-3 py-1 bg-emerald-500/5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Recommended Primary Result</span>
+                    </div>
+                </div>
+
+                <!-- Interactive SVG Phylogram Renderer -->
+                <div class="w-full overflow-x-auto py-4">
+                    <svg id="tree-svg" class="w-full min-w-[700px] h-[360px]" viewBox="0 0 800 360">
+                        <!-- Rendered dynamically via JS -->
+                    </svg>
+                </div>
+
+                <!-- Interactive Selected Node Info Bar -->
+                <div id="node-info-bar" class="border-t border-slate-800 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs font-light text-slate-400 space-y-2 sm:space-y-0">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="info" class="w-4 h-4 text-slate-500"></i>
+                        <span id="node-info-text">Hover or click any taxon node to inspect evolutionary distance, class, and expression details.</span>
+                    </div>
+                    <div class="font-mono text-[11px] text-slate-500" id="tree-scale-text">Scale: 0.1 substitutions/site</div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 6: RECOMBINANT CLONING STRATEGY (pET-28a & Anas georgica BEND7) -->
+    <section id="cloning" class="py-28 border-t border-slate-100 bg-white px-6">
+        <div class="max-w-6xl mx-auto space-y-16">
+            
+            <div class="max-w-3xl reveal space-y-4">
+                <span class="text-xs font-light text-blue-600 tracking-widest uppercase block font-mono">05 / Molecular Engineering</span>
+                <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                    Amplification Cloning Strategy: BEND7 into pET-28a
+                </h2>
+                <p class="text-xs font-light text-slate-500 leading-relaxed">
+                    A comprehensive directionally controlled expression cloning pipeline designed for the <i>Anas georgica</i> (yellow-billed pintail) <i>BEND7</i> CDS into the pET-28a bacterial expression vector (Addgene #42634).
+                </p>
+            </div>
+
+            <!-- Task 1: Gene Identification Matrix & Target Metadata -->
+            <div class="border-t border-slate-200 pt-10 space-y-8 reveal">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-light text-slate-900">Task 1: Target Gene Identification & Nomenclature</h3>
+                    <span class="text-xs font-mono text-slate-400">Target Species: Anas georgica</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs font-light">
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-6 border-l-2 border-slate-900 space-y-3">
+                            <span class="text-slate-900 font-normal uppercase tracking-wider text-[11px] block">Gene & Specimen Attributes</span>
+                            <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                <span class="text-slate-500">Full Gene Name:</span>
+                                <span class="text-slate-900 font-mono">BEN Domain Containing 7</span>
+                                <span class="text-slate-500">HGNC Symbol:</span>
+                                <span class="text-slate-900 font-mono">BEND7 (HGNC: 23514)</span>
+                                <span class="text-slate-500">Species Locus:</span>
+                                <span class="text-slate-900"><i>Anas georgica</i> (Avian)</span>
+                                <span class="text-slate-500">Human Ortholog Ref:</span>
+                                <span class="text-slate-900 font-mono">NCBI Gene ID: 222389</span>
+                                <span class="text-slate-500">Ensembl ID:</span>
+                                <span class="text-slate-900 font-mono">ENSG00000165626</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-6 border-l-2 border-blue-600 space-y-3">
+                            <span class="text-slate-900 font-normal uppercase tracking-wider text-[11px] block">Insert Molecular Parameters</span>
+                            <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                <span class="text-slate-500">Protein Length:</span>
+                                <span class="text-slate-900 font-mono">~548 aa (UniProt: Q8N7W2)</span>
+                                <span class="text-slate-500">CDS Length:</span>
+                                <span class="text-slate-900 font-mono">1,647 bp (ATG to Stop)</span>
+                                <span class="text-slate-500">Expression Vector:</span>
+                                <span class="text-slate-900 font-mono">pET-28a (Addgene #42634)</span>
+                                <span class="text-slate-500">Original Insert:</span>
+                                <span class="text-slate-900 font-mono">Human H2A.1 (~369 bp)</span>
+                                <span class="text-slate-500">Selection Marker:</span>
+                                <span class="text-slate-900 font-mono">Kanamycin (50 µg/mL)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 2: Insert Preparation & Restriction Enzyme Strategy -->
+            <div class="border-t border-slate-200 pt-10 space-y-8 reveal">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-light text-slate-900">Task 2: Directional Restriction Enzyme Strategy & Primer Design</h3>
+                    <span class="text-xs font-mono text-emerald-600 border border-emerald-300 px-2.5 py-0.5 bg-emerald-50">Enzyme Pair: BamHI / XhoI</span>
+                </div>
+
+                <p class="text-xs font-light text-slate-600 leading-relaxed">
+                    To clone the <i>Anas georgica BEND7</i> CDS into pET-28a, a dual-enzyme directional restriction digestion strategy using <b>BamHI</b> (5' overhang) and <b>XhoI</b> (3' overhang) was chosen. In silico restriction analysis via NEBcutter V3.0 confirmed zero internal cut sites within the 1,647 bp BEND7 coding sequence.
+                </p>
+
+                <!-- MCS Map Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-light border border-slate-200">
+                        <thead class="bg-slate-50 border-b border-slate-200 font-mono text-[11px] text-slate-500 uppercase">
+                            <tr>
+                                <th class="p-3">Enzyme</th>
+                                <th class="p-3">Recognition Site</th>
+                                <th class="p-3">MCS Position</th>
+                                <th class="p-3">Sticky Overhang</th>
+                                <th class="p-3">Internal Cut in BEND7 CDS?</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+                            <tr class="bg-blue-50/50">
+                                <td class="p-3 font-semibold text-slate-900">BamHI (5' site)</td>
+                                <td class="p-3 text-blue-700">5'-G^GATCC-3'</td>
+                                <td class="p-3 text-slate-600">~Position 194</td>
+                                <td class="p-3 text-slate-600">4 nt 5' overhang (GATC)</td>
+                                <td class="p-3 text-emerald-700 font-semibold">NO (0 sites)</td>
+                            </tr>
+                            <tr class="bg-blue-50/50">
+                                <td class="p-3 font-semibold text-slate-900">XhoI (3' site)</td>
+                                <td class="p-3 text-blue-700">5'-C^TCGAG-3'</td>
+                                <td class="p-3 text-slate-600">~Position 158</td>
+                                <td class="p-3 text-slate-600">4 nt 5' overhang (TCGA)</td>
+                                <td class="p-3 text-emerald-700 font-semibold">NO (0 sites)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-500">HindIII</td>
+                                <td class="p-3 text-slate-500">5'-A^AGCTT-3'</td>
+                                <td class="p-3 text-slate-500">~Position 179</td>
+                                <td class="p-3 text-slate-500">4 nt 5' overhang</td>
+                                <td class="p-3 text-slate-400">Unused in MCS</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-500">NdeI / NcoI</td>
+                                <td class="p-3 text-slate-500">5'-CA^TATG-3' / 5'-C^CATGG-3'</td>
+                                <td class="p-3 text-slate-500">~Position 200–203</td>
+                                <td class="p-3 text-slate-500">2–4 nt overhangs</td>
+                                <td class="p-3 text-slate-400">Unused in MCS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Primer Design Visualizer -->
+                <div class="space-y-4">
+                    <span class="text-xs font-light text-slate-500 uppercase tracking-wider block">Engineered Amplification PCR Primers</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-mono">
+                        
+                        <!-- Forward Primer -->
+                        <div class="p-5 border border-slate-200 bg-slate-50 space-y-2">
+                            <div class="flex justify-between text-slate-500 text-[10px]">
+                                <span>FORWARD PRIMER (5' -&gt; 3')</span>
+                                <span>BamHI Tailed</span>
+                            </div>
+                            <div class="text-sm font-semibold tracking-wider text-slate-900 break-all">
+                                <span class="text-slate-400">CGCGCG</span>-<span class="text-blue-600">GGATCC</span>-<span class="text-emerald-600">[ATG + 20nt CDS]</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500 font-sans pt-1">
+                                6-bp GC Clamp (<code class="font-mono">CGCGCG</code>) + BamHI site (<code class="font-mono text-blue-600">GGATCC</code>) + Gene-specific start sequence.
+                            </div>
+                        </div>
+
+                        <!-- Reverse Primer -->
+                        <div class="p-5 border border-slate-200 bg-slate-50 space-y-2">
+                            <div class="flex justify-between text-slate-500 text-[10px]">
+                                <span>REVERSE PRIMER (5' -&gt; 3')</span>
+                                <span>XhoI Tailed</span>
+                            </div>
+                            <div class="text-sm font-semibold tracking-wider text-slate-900 break-all">
+                                <span class="text-slate-400">CGCGCG</span>-<span class="text-blue-600">CTCGAG</span>-<span class="text-amber-600">[RevComp Stop + 20nt CDS]</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500 font-sans pt-1">
+                                6-bp GC Clamp + XhoI site (<code class="font-mono text-blue-600">CTCGAG</code>) + Reverse Complement including native stop codon.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Task 3: Step-by-Step Molecular Protocol (10-Step Table) -->
+            <div class="border-t border-slate-200 pt-10 space-y-8 reveal">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-light text-slate-900">Task 3: Recombinant Plasmid Construction & Host Amplification</h3>
+                    <span class="text-xs font-mono text-slate-500">Host Strain: E. coli DH5α (endA1 recA1)</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-light divide-y divide-slate-200 border border-slate-200">
+                        <thead class="bg-slate-900 text-white font-mono text-[11px] uppercase">
+                            <tr>
+                                <th class="p-3 w-12 text-center">Step</th>
+                                <th class="p-3 w-48">Molecular Action</th>
+                                <th class="p-3">Experimental Details & Technical Rationale</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-sans text-slate-600 text-[12px]">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">1</td>
+                                <td class="p-3 font-medium text-slate-900">Template cDNA Preparation</td>
+                                <td class="p-3 leading-relaxed">Extract total RNA from <i>Anas georgica</i> tissue; synthesize first-strand cDNA using SuperScript IV RT with oligo(dT) primers to represent the full mRNA transcript population.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">2</td>
+                                <td class="p-3 font-medium text-slate-900">High-Fidelity PCR Amplification</td>
+                                <td class="p-3 leading-relaxed">Amplify 1,647 bp BEND7 CDS using Q5 High-Fidelity DNA Polymerase and engineered BamHI/XhoI primers. Cycling: 98°C 30s; 35 cycles of [98°C 10s, 62°C 20s, 72°C 90s]; 72°C 5m. Expected product ~1,700 bp.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">3</td>
+                                <td class="p-3 font-medium text-slate-900">PCR Purification</td>
+                                <td class="p-3 leading-relaxed">Purify amplicon using spin-column cleanup (Qiagen MinElute) to eliminate excess primers, dNTPs, and polymerase. Verify yield and purity via NanoDrop (A260/280 ~1.8).</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">4</td>
+                                <td class="p-3 font-medium text-slate-900">Double Restriction Digest (Insert)</td>
+                                <td class="p-3 leading-relaxed">Digest purified PCR amplicon with BamHI-HF + XhoI (NEB CutSmart Buffer, 37°C, 2 hrs). Generates sticky 5'-GATC and 5'-TCGA overhangs. Heat-inactivate at 80°C for 20 mins.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">5</td>
+                                <td class="p-3 font-medium text-slate-900">Double Restriction Digest (Vector)</td>
+                                <td class="p-3 leading-relaxed">Digest pET-28a-H2A.1 plasmid (Addgene #42634) with BamHI-HF + XhoI under identical conditions to release the ~369 bp H2A.1 insert and linearize the ~5,350 bp vector backbone.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">6</td>
+                                <td class="p-3 font-medium text-slate-900">Dephosphorylation (Optional)</td>
+                                <td class="p-3 leading-relaxed">Treat linearized vector backbone with Calf Intestinal Alkaline Phosphatase (CIP) to prevent self-ligation of non-fully digested vector. Heat inactivate prior to ligation.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">7</td>
+                                <td class="p-3 font-medium text-slate-900">Gel Purification of Backbone</td>
+                                <td class="p-3 leading-relaxed">Resolve vector digestion products on 1% agarose gel. Excise and purify the large ~5,350 bp vector backbone band, separating it completely from the small H2A.1 fragment.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">8</td>
+                                <td class="p-3 font-medium text-slate-900">Gel Purification of Insert</td>
+                                <td class="p-3 leading-relaxed">Gel-purify digested BEND7 amplicon (~1,647 bp) to isolate clean cohesive-ended insert free of undigested or non-specifically amplified DNA fragments.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">9</td>
+                                <td class="p-3 font-medium text-slate-900">T4 DNA Ligation</td>
+                                <td class="p-3 leading-relaxed">Ligate purified vector backbone and BEND7 insert at a 1:3 molar ratio using T4 DNA Ligase at 16°C overnight. Include vector-only and insert-only controls.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-mono font-semibold text-slate-900">10</td>
+                                <td class="p-3 font-medium text-slate-900">Transformation & Selection</td>
+                                <td class="p-3 leading-relaxed">Transform chemically competent <i>E. coli</i> DH5α by heat-shock (42°C, 30s). Recover in SOC medium for 1 hr at 37°C and plate on LB agar containing 50 µg/mL Kanamycin.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Task 4: Multi-Tier Verification Strategy Matrix -->
+            <div class="border-t border-slate-200 pt-10 space-y-8 reveal">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-light text-slate-900">Task 4: Comprehensive Multi-Tier Verification Strategy</h3>
+                    <span class="text-xs font-mono text-slate-400">Colony PCR + Restriction Analysis + Sanger Sequencing</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Tier 1: Colony PCR -->
+                    <div class="border border-slate-200 p-6 bg-slate-50 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="text-xs font-mono font-semibold text-slate-900">Tier 1: Colony PCR</span>
+                            <span class="text-[10px] uppercase font-mono text-blue-600 bg-blue-100 px-2 py-0.5">Primary Screen</span>
+                        </div>
+                        <p class="text-xs font-light text-slate-600 leading-relaxed">
+                            Screen transformant colonies directly using T7 promoter + T7 terminator universal primers.
+                        </p>
+                        <div class="text-[11px] font-mono text-slate-700 bg-white p-3 border border-slate-200 space-y-1">
+                            <div>Re-ligated Vector: ~250 bp</div>
+                            <div class="text-emerald-600 font-semibold">Positive Recombinant: ~1,900 bp</div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 2: Restriction Digest -->
+                    <div class="border border-slate-200 p-6 bg-slate-50 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="text-xs font-mono font-semibold text-slate-900">Tier 2: Restriction Digest</span>
+                            <span class="text-[10px] uppercase font-mono text-amber-600 bg-amber-100 px-2 py-0.5">Structural Test</span>
+                        </div>
+                        <p class="text-xs font-light text-slate-600 leading-relaxed">
+                            Diagnostic BamHI + XhoI double digest on miniprep DNA from colony PCR positive clones.
+                        </p>
+                        <div class="text-[11px] font-mono text-slate-700 bg-white p-3 border border-slate-200 space-y-1">
+                            <div>Band 1 (Backbone): ~5,350 bp</div>
+                            <div class="text-emerald-600 font-semibold">Band 2 (BEND7 Insert): ~1,647 bp</div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 3: Sanger Sequencing -->
+                    <div class="border border-slate-200 p-6 bg-slate-50 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="text-xs font-mono font-semibold text-slate-900">Tier 3: Sanger Sequencing</span>
+                            <span class="text-[10px] uppercase font-mono text-emerald-700 bg-emerald-100 px-2 py-0.5">Definitive Test</span>
+                        </div>
+                        <p class="text-xs font-light text-slate-600 leading-relaxed">
+                            Sequence full 1,647 bp insert using T7 promoter/terminator primers plus internal BEND7 primers.
+                        </p>
+                        <div class="text-[11px] font-mono text-slate-700 bg-white p-3 border border-slate-200 space-y-1">
+                            <div class="text-emerald-600 font-semibold">100% Sequence Accuracy</div>
+                            <div>Confirms 0 point mutations/indels</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 6: PROTEIN STRUCTURE & LIGAND INTERACTION ANALYSIS (PDB 7YUN HOMOLOG) -->
+    <section id="structure" class="py-28 border-t border-slate-100 bg-slate-50/40 px-6">
+        <div class="max-w-6xl mx-auto space-y-16">
+            
+            <div class="max-w-3xl reveal space-y-4">
+                <span class="text-xs font-light text-indigo-600 tracking-widest uppercase block font-mono">06 / Structural Biology</span>
+                <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                    Protein Structure & Ligand Interaction Analysis
+                </h2>
+                <p class="text-xs font-light text-slate-500 leading-relaxed">
+                    Homology-based structural analysis of the BEND7 BEN domain fold and its physiological DNA ligand interaction using the 2.13 Å crystal structure of Human BEND6 (PDB 7YUN) as a validated paralog model.
+                </p>
+            </div>
+
+            <!-- Structure Selection Rationale -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-slate-200 pt-10 reveal">
+                <div class="md:col-span-4 space-y-3">
+                    <span class="text-xs font-mono text-slate-400 block">06.1 Methodology</span>
+                    <h3 class="text-xl font-light text-slate-900">Homology Model Selection Rationale</h3>
+                    <div class="inline-block px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-800 text-[10px] font-mono">
+                        PDB Entry: 7YUN (2.13 Å)
+                    </div>
+                </div>
+                <div class="md:col-span-8 space-y-4 text-xs font-light text-slate-600 leading-relaxed">
+                    <p>
+                        A search of the RCSB PDB for <code class="font-mono text-slate-800 bg-slate-100 px-1 py-0.5">BEND7</code> or "BEN domain-containing protein 7" confirms that no experimentally solved structure currently exists for any organism, including <i>Anas georgica</i>.
+                    </p>
+                    <p>
+                        Sequence similarity searches (BLASTp against PDB) identify <b>Human BEND6</b> as the closest solved structural homolog. Both BEND6 and BEND7 are paralogous single-BEN-domain proteins with near-identical five-helix bundle folds. The selected reference structure, <b>PDB 7YUN</b> (Liu et al., 2023, <i>J. Biol. Chem.</i>), represents the crystal structure of the BEND6 BEN domain in complex with a 12-mer DNA duplex containing 5-methylcytosine (5CM).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ligand-Interacting Residues Table -->
+            <div class="border-t border-slate-200 pt-10 space-y-8 reveal">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-light text-slate-900">06.2 DNA Ligand-Interacting Residue Mapping</h3>
+                    <span class="text-xs font-mono text-slate-500">Physiological Ligand: Double-Stranded Methylated DNA</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-light border border-slate-200">
+                        <thead class="bg-slate-900 text-white font-mono text-[11px] uppercase">
+                            <tr>
+                                <th class="p-3">Residue</th>
+                                <th class="p-3">Structural Location</th>
+                                <th class="p-3">DNA Target Partner</th>
+                                <th class="p-3">Interaction Geometry & Mechanism</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-sans text-slate-700 text-[11px]">
+                            <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="highlightResidue('arg254')">
+                                <td class="p-3 font-mono font-semibold text-orange-600">Arg254</td>
+                                <td class="p-3 font-mono text-slate-600">α5 Helix</td>
+                                <td class="p-3 font-mono text-slate-900">Base of Guanine 7' (Major Groove)</td>
+                                <td class="p-3 leading-relaxed">Direct hydrogen bonds from side-chain guanidinium to base; base-specific major-groove recognition; alternate rotamer contacts backbone.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="highlightResidue('asn261')">
+                                <td class="p-3 font-mono font-semibold text-emerald-600">Asn261</td>
+                                <td class="p-3 font-mono text-slate-600">α5 Helix</td>
+                                <td class="p-3 font-mono text-slate-900">Base of Guanine 5' & Cytosine 3</td>
+                                <td class="p-3 leading-relaxed">Hydrogen bond (side-chain amide) + water-mediated hydrogen bond to Cytosine 3 for sequence discrimination.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="highlightResidue('lys265')">
+                                <td class="p-3 font-mono font-semibold text-blue-600">Lys265</td>
+                                <td class="p-3 font-mono text-slate-600">C-terminal end of α5 Helix</td>
+                                <td class="p-3 font-mono text-slate-900">Bases of Guanine 3' & Adenine 4'</td>
+                                <td class="p-3 leading-relaxed">Two direct hydrogen bonds (side-chain NZ to bases); Alanine mutation reduces DNA binding capacity ~2–6 fold.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="highlightResidue('ser217')">
+                                <td class="p-3 font-mono font-semibold text-purple-600">Ser217 / Thr218</td>
+                                <td class="p-3 font-mono text-slate-600">Loop 1 (Minor Groove)</td>
+                                <td class="p-3 font-mono text-slate-900">Bases of Guanine 7' & Guanine 8</td>
+                                <td class="p-3 leading-relaxed">Hydrogen bonds from side-chain hydroxyls as flexible Loop 1 inserts directly into the DNA minor groove.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="highlightResidue('lys191')">
+                                <td class="p-3 font-mono font-semibold text-pink-600">Lys191 / Gln258</td>
+                                <td class="p-3 font-mono text-slate-600">α2 Helix / α5 Helix</td>
+                                <td class="p-3 font-mono text-slate-900">Sugar-Phosphate Backbone</td>
+                                <td class="p-3 leading-relaxed">Electrostatic hydrogen bonds and salt bridges with the negatively charged backbone, anchoring protein-DNA docking.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Interactive 3D Structural Architecture SVG & Inspector -->
+            <div class="border border-slate-200 p-8 bg-white space-y-8 reveal">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="text-base font-light text-slate-900">06.3 Five-Helix Bundle Fold & DNA Interface Map</h3>
+                        <p class="text-xs font-light text-slate-500">Schematic representation of PDB 7YUN BEN domain bound to methylated DNA</p>
+                    </div>
+                    <div id="residue-badge" class="mt-2 md:mt-0 font-mono text-[11px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1">
+                        Select a residue above or below to inspect
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- SVG Structure Diagram -->
+                    <div class="md:col-span-7 bg-slate-900 p-6 border border-slate-800 rounded-none flex flex-col items-center justify-center min-h-[300px]">
+                        <svg class="w-full h-64" viewBox="0 0 500 240">
+                            <!-- DNA Duplex Background Strands -->
+                            <path d="M 50 180 Q 150 140, 250 180 T 450 180" fill="none" stroke="#e2e8f0" stroke-width="6" opacity="0.3"/>
+                            <path d="M 50 200 Q 150 240, 250 200 T 450 200" fill="none" stroke="#94a3b8" stroke-width="6" opacity="0.3"/>
+                            <text x="50" y="225" fill="#64748b" font-size="10" font-family="monospace">5' DNA DUPLEX (12-mer) 3'</text>
+
+                            <!-- Protein Alpha Helices -->
+                            <!-- alpha 1 -->
+                            <rect x="80" y="50" width="70" height="20" rx="10" fill="#38bdf8" opacity="0.8"/>
+                            <text x="100" y="64" fill="#0f172a" font-size="10" font-family="monospace" font-weight="bold">α1</text>
+
+                            <!-- alpha 2 (Lys191) -->
+                            <rect id="svg-alpha2" x="170" y="40" width="70" height="20" rx="10" fill="#38bdf8" class="transition-all duration-300"/>
+                            <text x="190" y="54" fill="#0f172a" font-size="10" font-family="monospace" font-weight="bold">α2</text>
+                            <circle id="svg-lys191" cx="210" cy="50" r="5" fill="#ec4899" class="animate-pulse cursor-pointer" onclick="highlightResidue('lys191')"/>
+
+                            <!-- alpha 3 & 4 -->
+                            <rect x="260" y="50" width="50" height="20" rx="10" fill="#38bdf8" opacity="0.8"/>
+                            <rect x="320" y="40" width="50" height="20" rx="10" fill="#38bdf8" opacity="0.8"/>
+
+                            <!-- Loop 1 (Ser217) extending into Minor Groove -->
+                            <path id="svg-loop1" d="M 150 60 Q 130 110, 160 170 Q 180 120, 240 60" fill="none" stroke="#c084fc" stroke-width="3" stroke-dasharray="4"/>
+                            <circle id="svg-ser217" cx="160" cy="170" r="6" fill="#a855f7" class="animate-pulse cursor-pointer" onclick="highlightResidue('ser217')"/>
+                            <text x="100" y="175" fill="#c084fc" font-size="9" font-family="monospace">Loop 1 (Minor Groove)</text>
+
+                            <!-- alpha 5 (Arg254, Asn261, Lys265) inserted in Major Groove -->
+                            <g id="svg-alpha5-group" class="cursor-pointer" onclick="highlightResidue('arg254')">
+                                <rect id="svg-alpha5" x="240" y="100" width="130" height="26" rx="13" fill="#f97316" class="transition-all duration-300"/>
+                                <text x="260" y="117" fill="#ffffff" font-size="11" font-family="sans-serif" font-weight="bold">α5 Helix (Major Groove)</text>
+                                <circle cx="280" cy="113" r="5" fill="#ea580c"/>
+                                <circle cx="310" cy="113" r="5" fill="#10b981"/>
+                                <circle cx="340" cy="113" r="5" fill="#3b82f6"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Dynamic Details Inspector Card -->
+                    <div class="md:col-span-5 space-y-4 text-xs font-light">
+                        <div id="inspector-card" class="p-6 border border-slate-200 bg-slate-50 space-y-3">
+                            <span id="insp-title" class="text-sm font-semibold text-slate-900 block font-mono">Arg254 (α5 Helix)</span>
+                            <div class="space-y-1">
+                                <span class="text-slate-400 uppercase text-[10px] block">Target Partner</span>
+                                <p id="insp-target" class="text-slate-800 font-mono">Guanine 7' Base in Major Groove</p>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-slate-400 uppercase text-[10px] block">Interaction Mechanism</span>
+                                <p id="insp-desc" class="text-slate-600 leading-relaxed">
+                                    Guanidinium group forms direct hydrogen bonds with Guanine 7' in the major groove. Alternate side-chain rotamers contact the sugar-phosphate backbone.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PyMOL Command Script Box -->
+            <div class="border-t border-slate-200 pt-10 space-y-6 reveal">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-light text-slate-900">06.4 PyMOL Reproducibility Pipeline</h3>
+                        <p class="text-xs font-light text-slate-500">Execute this script in PyMOL to reconstruct protein-DNA interaction snapshots</p>
+                    </div>
+                    <button onclick="copyPyMolScript()" class="px-3 py-1.5 border border-slate-900 text-slate-900 text-[11px] font-mono hover:bg-slate-900 hover:text-white transition-colors">
+                        Copy Script
+                    </button>
+                </div>
+
+                <pre id="pymol-script" class="p-5 bg-slate-900 text-slate-100 font-mono text-[11px] overflow-x-auto leading-relaxed">
+<span class="text-slate-500"># Fetch human BEND6 BEN domain-DNA complex (2.13 A)</span>
+fetch 7yun, type=pdb
+hide everything; show cartoon, polymer.protein; show cartoon, polymer.nucleic
+color skyblue, polymer.protein; color orange, polymer.nucleic
+
+<span class="text-slate-500"># Highlight key base-contacting and backbone residues</span>
+show sticks, resi 254+261+265+217+218+191+258 and polymer.protein
+color orange, resi 254; color green, resi 261; color blue, resi 265
+color purple, resi 217+218; color magenta, resi 191; color teal, resi 258
+
+<span class="text-slate-500"># Display hydrogen bonding distances and orient camera</span>
+distance hb1, resi 254 and polymer.protein, resi 7 and polymer.nucleic, mode=2
+zoom resi 254+261+265+217+218 and polymer.protein, 8
+ray 1600, 1200; png bend6_dna_interaction.png, dpi=300</pre>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 7: ANALYTICAL DISCUSSION -->
+    <section id="discussion" class="py-28 border-t border-slate-100 px-6">
+        <div class="max-w-6xl mx-auto space-y-20">
+            
+            <div class="max-w-3xl reveal space-y-4">
+                <span class="text-xs font-light text-slate-400 tracking-widest uppercase block">06 / Critical Evaluation</span>
+                <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                    Analytical Discussion & Key Insights
+                </h2>
+                <p class="text-xs font-light text-slate-500 leading-relaxed">
+                    A rigorous comparison addressing algorithmic congruence, biological fidelity, rogue taxon artifacts, and nucleotide vs protein resolution.
+                </p>
+            </div>
+
+            <!-- Point 1: Methodological Consistency -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 border-t border-slate-200 pt-10 reveal">
+                <div class="md:col-span-4">
+                    <span class="text-xs font-mono text-slate-400 block mb-1">6.1</span>
+                    <h3 class="text-xl font-light text-slate-900">Methodological Consistency</h3>
+                    <p class="text-xs font-light text-slate-500 mt-2">Do the three algorithms agree?</p>
+                </div>
+                <div class="md:col-span-8 space-y-6 text-xs font-light text-slate-600 leading-relaxed">
+                    <p>
+                        All three algorithms recover the same high-level topology: the five vertebrate classes are monophyletic, the four mammalian clades are correctly resolved, and the vertebrate grade (fish → amphibia → reptiles/birds → mammals) is preserved. This high congruence reflects strong purifying selection acting on the BEN domain.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                        <div class="border-l border-slate-200 pl-4 space-y-1">
+                            <span class="text-slate-900 font-normal block">NJ vs. UPGMA Distortions</span>
+                            <p class="text-slate-500">
+                                UPGMA equalizes rates, artificially compressing the long <i>Mus musculus</i> branch (rodents evolve ~2.5x faster than mammalian average).
+                            </p>
+                        </div>
+                        <div class="border-l border-slate-200 pl-4 space-y-1">
+                            <span class="text-slate-900 font-normal block">NJ vs. MP & "Rogue Taxa"</span>
+                            <p class="text-slate-500">
+                                MP places <i>Bos taurus</i> slightly closer to Euarchontoglires due to homoplasy in BEN domain character states. Model-based NJ corrects for this.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Point 2: Taxonomic Accuracy -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 border-t border-slate-200 pt-10 reveal">
+                <div class="md:col-span-4">
+                    <span class="text-xs font-mono text-slate-400 block mb-1">6.2</span>
+                    <h3 class="text-xl font-light text-slate-900">Taxonomic Accuracy</h3>
+                    <p class="text-xs font-light text-slate-500 mt-2">Does the tree match known biology?</p>
+                </div>
+                <div class="md:col-span-8 space-y-6 text-xs font-light text-slate-600 leading-relaxed">
+                    <p>
+                        The inferred trees closely match established vertebrate phylogenomics (Hedges & Kumar, 2009). The ~1% divergence between human and chimpanzee reflects their ~6 Mya split. <i>Anas georgica</i> and <i>Gallus gallus</i> properly group within Diapsida (Aves), while <i>Danio rerio</i> represents the most ancient outgroup (~450 Mya divergence).
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 8: INTERACTIVE EVOLUTIONARY SIGNAL SIMULATOR -->
+    <section id="simulator" class="py-28 border-t border-slate-100 bg-slate-50/70 px-6">
+        <div class="max-w-6xl mx-auto space-y-12">
+            
+            <div class="max-w-2xl reveal space-y-3">
+                <span class="text-xs font-light text-slate-400 tracking-widest uppercase block">07 / Interactive Demonstration</span>
+                <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                    Codon Saturation & Signal Decay Simulator
+                </h2>
+                <p class="text-xs font-light text-slate-500 leading-relaxed">
+                    Adjust divergence time (million years ago) to observe how nucleotide sequences suffer from noise saturation at 3rd codon positions compared to 20-letter amino acid sequences.
+                </p>
+            </div>
+
+            <div class="border border-slate-200 p-8 bg-white space-y-8 reveal">
+                
+                <!-- Time Slider Control -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-xs font-light">
+                        <span class="text-slate-500 uppercase tracking-wider">Divergence Time (Mya)</span>
+                        <span id="sim-time-val" class="font-mono text-base text-slate-900 font-normal">60 Mya (Euarchontoglires Split)</span>
+                    </div>
+                    <input type="range" id="sim-slider" min="5" max="500" value="60" step="5"
+                           class="w-full h-1 bg-slate-200 rounded-none appearance-none cursor-pointer accent-slate-900"
+                           oninput="updateSimulator(this.value)">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                        <span>5 Mya (Human/Chimp)</span>
+                        <span>90 Mya (Afrotheria)</span>
+                        <span>310 Mya (Aves/Reptiles)</span>
+                        <span>450 Mya (Fish Outgroup)</span>
+                    </div>
+                </div>
+
+                <!-- Simulation Visual Output Bars -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-100">
+                    
+                    <!-- Nucleotide Signal -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-xs font-light">
+                            <span class="text-slate-900 font-normal">mRNA Nucleotide Signal Integrity</span>
+                            <span id="mrna-signal-percent" class="font-mono text-slate-600">88% Signal</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-100">
+                            <div id="mrna-bar" class="h-full bg-slate-800 transition-all duration-300 w-[88%]"></div>
+                        </div>
+                        <p id="mrna-status" class="text-[11px] font-light text-slate-500 leading-normal">
+                            Minimal saturation. Synonymous substitutions provide supplementary resolution for close mammalian splits.
+                        </p>
+                    </div>
+
+                    <!-- Protein Signal -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-xs font-light">
+                            <span class="text-slate-900 font-normal">BEN Protein Domain Signal Integrity</span>
+                            <span id="protein-signal-percent" class="font-mono text-slate-600">97% Signal</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-100">
+                            <div id="protein-bar" class="h-full bg-blue-600 transition-all duration-300 w-[97%]"></div>
+                        </div>
+                        <p id="protein-status" class="text-[11px] font-light text-slate-500 leading-normal">
+                            High signal-to-noise ratio. 20-amino-acid alphabet resists random convergent matches.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 9: CONCLUSION & REFERENCES -->
+    <section id="conclusion" class="py-28 border-t border-slate-100 px-6">
+        <div class="max-w-6xl mx-auto space-y-16">
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start reveal">
+                <div class="md:col-span-4">
+                    <span class="text-xs font-light text-slate-400 tracking-widest uppercase block mb-2">08 / Summary</span>
+                    <h2 class="text-3xl font-extralight text-slate-900 tracking-tight">
+                        Conclusions & Future Directions
+                    </h2>
+                </div>
+                <div class="md:col-span-8 space-y-6 text-xs font-light text-slate-600 leading-relaxed">
+                    <p>
+                        This analysis establishes BEND7 as an exceptionally robust phylogenetic marker across vertebrate lineages while providing a validated amplification cloning strategy for <i>Anas georgica BEND7</i> expression in pET-28a. Purifying selection on the BEN domain preserves evolutionary signals, and directional BamHI/XhoI cloning allows seamless vector construction.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Academic References -->
+            <div class="border-t border-slate-200 pt-12 space-y-6 reveal">
+                <span class="text-xs font-light text-slate-400 tracking-widest uppercase block">Academic References & Tools</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-[11px] font-light text-slate-500 font-mono">
+                    <p>Addgene Plasmid #42634: pET-28a-H2A.1 reference construction vector.</p>
+                    <p>Edgar, R.C. (2004). MUSCLE: multiple sequence alignment with high accuracy. <i>Nucleic Acids Res</i>, 32(5), 1792–1797.</p>
+                    <p>Fitch, W.M. (1971). Toward defining the course of evolution. <i>Systematic Biology</i>, 20(4), 406–416.</p>
+                    <p>Hedges, S.B., & Kumar, S. (2009). <i>The Timetree of Life</i>. Oxford University Press.</p>
+                    <p>Liu, Y., Zhang, X., Xiao, Y., Yang, Y., Song, J., Li, Y., Chen, Z., Hughes, T.R., & Min, J. (2023). Crystal structure of human BEND6 BEN domain in complex with methylated DNA. <i>J. Biol. Chem.</i>, 299(2), 104734. PDB: 7YUN.</p>
+                    <p>NEBcutter V3.0: In silico restriction mapping (New England Biolabs).</p>
+                    <p>Saitou, N., & Nei, M. (1987). The neighbor-joining method. <i>Mol Biol Evol</i>, 4(4), 406–425.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER SECTION -->
+    <footer class="py-16 border-t border-slate-200 bg-slate-50 px-6 text-xs font-light text-slate-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-1 text-center md:text-left">
+                <div class="text-slate-900 font-normal uppercase tracking-wider">BEND7 Phylogenetic & Expression Cloning Report</div>
+                <div>BRAC University • Department of Mathematics & Natural Sciences</div>
+                <div class="text-[11px] text-slate-400">Course: BTE401 Bioinformatics • Submitted by Shadman Shakib (22136032)</div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="https://drive.google.com/drive/folders/1NbPekyy2_9gi9yjUpxR1bwvz7QqhV1Iw?usp=sharing" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="px-6 py-3 bg-slate-900 text-white uppercase tracking-widest text-[11px] hover:bg-slate-800 transition-colors">
+                    Access Google Drive Folder
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Dataset Sequence Inventory
+        const sequences = [
+            { species: "Homo sapiens", accession: "NP_001278393.1", class: "Mammalia", clade: "Primates (Euarchontoglires)", type: "Protein", expression: "Brain, Testis" },
+            { species: "Homo sapiens (mRNA)", accession: "NM_001291464.2", class: "Mammalia", clade: "Primates (Euarchontoglires)", type: "mRNA", expression: "Brain, Testis" },
+            { species: "Anas georgica (Target)", accession: "XM_001199752.2*", class: "Aves", clade: "Anatidae (Yellow-billed pintail)", type: "CDS (1,647 bp)", expression: "Neural / Central Tissue" },
+            { species: "Gallus gallus", accession: "XP_015148770.2", class: "Aves", clade: "Neognathae (Diapsida)", type: "Protein", expression: "Embryonic Tissues" },
+            { species: "Pan troglodytes", accession: "XP_016784012.1", class: "Mammalia", clade: "Primates (Euarchontoglires)", type: "Protein", expression: "Central Nervous System" },
+            { species: "Mus musculus", accession: "NP_080428.2", class: "Mammalia", clade: "Rodentia (Euarchontoglires)", type: "Protein", expression: "Ubiquitous" },
+            { species: "Mus musculus (mRNA)", accession: "NM_026152.4", class: "Mammalia", clade: "Rodentia (Euarchontoglires)", type: "mRNA", expression: "Ubiquitous" },
+            { species: "Bos taurus", accession: "NP_001179993.1", class: "Mammalia", clade: "Laurasiatheria", type: "Protein", expression: "Skeletal Muscle" },
+            { species: "Canis lupus", accession: "XP_038523781.1", class: "Mammalia", clade: "Laurasiatheria", type: "Protein", expression: "Central Nervous System" },
+            { species: "Loxodonta africana", accession: "XP_023407312.1", class: "Mammalia", clade: "Afrotheria", type: "Protein", expression: "Brain" },
+            { species: "Anolis carolinensis", accession: "XP_008104127.1", class: "Reptilia", clade: "Squamata (Diapsida)", type: "Protein", expression: "Central Nervous System" },
+            { species: "Xenopus tropicalis", accession: "XP_031754938.1", class: "Amphibia", clade: "Anura (Tetrapoda)", type: "Protein", expression: "Early Development" },
+            { species: "Danio rerio", accession: "NP_001157589.1", class: "Actinopterygii", clade: "Cypriniformes (Outgroup)", type: "Protein", expression: "Whole Embryo" }
+        ];
+
+        // Populate Sequence Table
+        function renderTable(data) {
+            const tbody = document.getElementById('sequence-table-body');
+            tbody.innerHTML = '';
+            data.forEach(seq => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-100/50 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 px-3 font-normal text-slate-900">${seq.species}</td>
+                    <td class="py-3 px-3 text-slate-500">${seq.accession}</td>
+                    <td class="py-3 px-3 text-slate-600">${seq.class}</td>
+                    <td class="py-3 px-3 text-slate-500">${seq.clade}</td>
+                    <td class="py-3 px-3">
+                        <span class="px-2 py-0.5 text-[10px] ${seq.type.includes('CDS') ? 'bg-blue-100 text-blue-800 font-semibold' : seq.type === 'mRNA' ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-800'}">
+                            ${seq.type}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-slate-500">${seq.expression}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterDataset(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('border-slate-900', 'text-slate-900');
+                btn.classList.add('border-transparent', 'text-slate-400');
+            });
+            const activeBtn = document.getElementById(`filter-${category.toLowerCase()}`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-slate-900', 'text-slate-900');
+                activeBtn.classList.remove('border-transparent', 'text-slate-400');
+            }
+
+            if (category === 'all') {
+                renderTable(sequences);
+            } else if (category === 'mRNA') {
+                renderTable(sequences.filter(s => s.type.includes('mRNA')));
+            } else {
+                renderTable(sequences.filter(s => s.class === category));
+            }
+        }
+
+        // Interactive Trees Data Models
+        const treeData = {
+            nj: {
+                title: "Neighbor-Joining (NJ) Tree",
+                subtitle: "12 Taxa | Estimated Substitutions per Site (JTT Model Proxy)",
+                scale: "Scale: 0.1 substitutions/site",
+                nodes: [
+                    { name: "C. lupus", x: 220, y: 30, len: "0.08 substitutions/site", group: "Laurasiatheria" },
+                    { name: "B. taurus", x: 200, y: 60, len: "0.09 substitutions/site", group: "Laurasiatheria" },
+                    { name: "H. sapiens mRNA", x: 300, y: 90, len: "0.04 substitutions/site", group: "mRNA" },
+                    { name: "H. sapiens", x: 270, y: 120, len: "0.01 substitutions/site", group: "Primates" },
+                    { name: "P. troglodytes", x: 260, y: 150, len: "0.01 substitutions/site", group: "Primates" },
+                    { name: "M. musculus mRNA", x: 280, y: 180, len: "0.14 substitutions/site", group: "mRNA" },
+                    { name: "M. musculus", x: 240, y: 210, len: "0.12 substitutions/site", group: "Rodentia" },
+                    { name: "L. africana", x: 210, y: 240, len: "0.18 substitutions/site", group: "Afrotheria" },
+                    { name: "A. georgica (Target)", x: 330, y: 270, len: "0.26 substitutions/site", group: "Aves" },
+                    { name: "A. carolinensis", x: 410, y: 300, len: "0.32 substitutions/site", group: "Reptilia" },
+                    { name: "X. tropicalis", x: 520, y: 330, len: "0.45 substitutions/site", group: "Amphibia" },
+                    { name: "D. rerio", x: 680, y: 350, len: "0.62 substitutions/site", group: "Actinopterygii" }
+                ],
+                lines: [
+                    { x1: 50, y1: 190, x2: 120, y2: 190 },
+                    { x1: 120, y1: 100, x2: 120, y2: 280 },
+                    { x1: 120, y1: 100, x2: 170, y2: 100 },
+                    { x1: 170, y1: 45, x2: 170, y2: 150 },
+                    { x1: 170, y1: 45, x2: 200, y2: 45 },
+                    { x1: 200, y1: 30, x2: 220, y2: 30 },
+                    { x1: 120, y1: 280, x2: 280, y2: 280 },
+                    { x1: 280, y1: 240, x2: 280, y2: 320 },
+                    { x1: 280, y1: 240, x2: 210, y2: 240 },
+                    { x1: 280, y1: 320, x2: 330, y2: 320 },
+                    { x1: 330, y1: 270, x2: 330, y2: 270 },
+                    { x1: 330, y1: 320, x2: 410, y2: 320 },
+                    { x1: 410, y1: 340, x2: 520, y2: 340 },
+                    { x1: 520, y1: 350, x2: 680, y2: 350 }
+                ]
+            },
+            upgma: {
+                title: "UPGMA Tree (Strict Molecular Clock)",
+                subtitle: "12 Taxa | Relative Time (Assumes Constant Rate)",
+                scale: "Scale: 0.1 arbitrary time units",
+                nodes: [
+                    { name: "C. lupus", x: 450, y: 30, len: "Equalized clock distance", group: "Laurasiatheria" },
+                    { name: "B. taurus", x: 450, y: 60, len: "Equalized clock distance", group: "Laurasiatheria" },
+                    { name: "H. sapiens", x: 450, y: 120, len: "Equalized clock distance", group: "Primates" },
+                    { name: "A. georgica", x: 450, y: 270, len: "Equalized clock distance", group: "Aves" },
+                    { name: "D. rerio", x: 450, y: 350, len: "Equalized clock distance", group: "Actinopterygii" }
+                ],
+                lines: [
+                    { x1: 50, y1: 190, x2: 100, y2: 190 },
+                    { x1: 100, y1: 110, x2: 100, y2: 290 },
+                    { x1: 100, y1: 110, x2: 450, y2: 110 },
+                    { x1: 100, y1: 290, x2: 450, y2: 290 }
+                ]
+            },
+            mp: {
+                title: "Maximum Parsimony (MP) Tree",
+                subtitle: "10 Protein Taxa | Estimated Minimum Parsimony Steps",
+                scale: "Scale: 5 parsimony steps (x100)",
+                nodes: [
+                    { name: "C. lupus", x: 230, y: 30, len: "12 Parsimony Steps", group: "Laurasiatheria" },
+                    { name: "A. georgica", x: 420, y: 255, len: "42 Parsimony Steps", group: "Aves" },
+                    { name: "D. rerio", x: 720, y: 350, len: "115 Parsimony Steps", group: "Actinopterygii" }
+                ],
+                lines: [
+                    { x1: 50, y1: 190, x2: 110, y2: 190 },
+                    { x1: 110, y1: 90, x2: 110, y2: 280 },
+                    { x1: 110, y1: 280, x2: 420, y2: 280 }
+                ]
+            }
+        };
+
+        let currentTree = 'nj';
+
+        function switchTree(type) {
+            currentTree = type;
+            document.querySelectorAll('.tree-tab').forEach(tab => {
+                tab.classList.remove('bg-white', 'text-slate-900', 'font-normal');
+                tab.classList.add('text-slate-400');
+            });
+            const activeTab = document.getElementById(`tree-tab-${type}`);
+            if (activeTab) {
+                activeTab.classList.add('bg-white', 'text-slate-900', 'font-normal');
+                activeTab.classList.remove('text-slate-400');
+            }
+
+            const data = treeData[type];
+            document.getElementById('tree-title').textContent = data.title;
+            document.getElementById('tree-subtitle').textContent = data.subtitle;
+            document.getElementById('tree-scale-text').textContent = data.scale;
+
+            renderSVGTree(data);
+        }
+
+        function renderSVGTree(data) {
+            const svg = document.getElementById('tree-svg');
+            svg.innerHTML = '';
+
+            // Draw line branches
+            data.lines.forEach(l => {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${l.x1} ${l.y1} L ${l.x2} ${l.y1} L ${l.x2} ${l.y2}`);
+                path.setAttribute('stroke', '#475569');
+                path.setAttribute('stroke-width', '1.5');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('class', 'tree-node-path');
+                svg.appendChild(path);
+            });
+
+            // Draw Taxon Leaf Nodes
+            data.nodes.forEach(n => {
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                group.setAttribute('class', 'cursor-pointer group');
+                group.onclick = () => highlightNode(n);
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', n.x);
+                circle.setAttribute('cy', n.y);
+                circle.setAttribute('r', '4');
+                circle.setAttribute('fill', n.name.includes('Anas') ? '#2563eb' : n.group === 'mRNA' ? '#f59e0b' : '#38bdf8');
+                circle.setAttribute('class', 'transition-all duration-300 group-hover:r-6 group-hover:fill-white');
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', n.x + 12);
+                text.setAttribute('y', n.y + 4);
+                text.setAttribute('fill', n.name.includes('Anas') ? '#60a5fa' : '#f8fafc');
+                text.setAttribute('font-size', '11');
+                text.setAttribute('font-family', 'Inter, sans-serif');
+                text.setAttribute('font-weight', n.name.includes('Anas') ? '600' : '300');
+                text.textContent = n.name;
+
+                group.appendChild(circle);
+                group.appendChild(text);
+                svg.appendChild(group);
+            });
+        }
+
+        function highlightNode(node) {
+            const infoText = document.getElementById('node-info-text');
+            infoText.innerHTML = `<span class="text-white font-normal">${node.name}</span> (${node.group}) — Branch distance: <span class="text-sky-400 font-mono">${node.len}</span>`;
+        }
+
+        function updateSimulator(mya) {
+            document.getElementById('sim-time-val').textContent = `${mya} Mya (${getDivergenceLabel(mya)})`;
+
+            const mrnaSignal = Math.max(12, Math.round(100 * Math.exp(-0.0045 * mya)));
+            const proteinSignal = Math.max(48, Math.round(100 * Math.exp(-0.0012 * mya)));
+
+            document.getElementById('mrna-signal-percent').textContent = `${mrnaSignal}% Signal`;
+            document.getElementById('mrna-bar').style.width = `${mrnaSignal}%`;
+
+            document.getElementById('protein-signal-percent').textContent = `${proteinSignal}% Signal`;
+            document.getElementById('protein-bar').style.width = `${proteinSignal}%`;
+
+            if (mya < 40) {
+                document.getElementById('mrna-status').textContent = "High nucleotide utility: Synonymous mutations provide extra resolution for closely related species.";
+                document.getElementById('protein-status').textContent = "Near identical protein sequence: Very few amino-acid changes.";
+            } else if (mya < 180) {
+                document.getElementById('mrna-status').textContent = "Moderate saturation: Third-codon transitions beginning to generate homoplasy noise.";
+                document.getElementById('protein-status').textContent = "Optimal signal: BEN domain purifying selection yields clear divergence markers.";
+            } else {
+                document.getElementById('mrna-status').textContent = "Severe codon saturation: Multiple hits at same sites destroy deep phylogenetic signal.";
+                document.getElementById('protein-status').textContent = "Superior resolution: 20-letter amino-acid matrix maintains clean cross-class alignment.";
+            }
+        }
+
+        function getDivergenceLabel(mya) {
+            if (mya < 10) return "Human / Chimpanzee Split";
+            if (mya < 40) return "Primate / Rodent Radiation";
+            if (mya < 80) return "Laurasiatheria / Euarchontoglires Split";
+            if (mya < 120) return "Afrotheria Basal Placental Divergence";
+            if (mya < 250) return "Diapsida (Reptiles/Birds / Anas) Divergence";
+            if (mya < 380) return "Tetrapod / Amphibian Split";
+            return "Actinopterygii (Ray-finned Fish) Deep Split";
+        }
+
+        // Residue Inspector Handler
+        const residueDetails = {
+            arg254: {
+                title: "Arg254 (α5 Helix)",
+                target: "Base of Guanine 7' (Major Groove)",
+                desc: "Direct hydrogen bonds from side-chain guanidinium group to base in major groove; alternate side-chain rotamers also contact the DNA sugar-phosphate backbone."
+            },
+            asn261: {
+                title: "Asn261 (α5 Helix)",
+                target: "Base of Guanine 5' & Cytosine 3",
+                desc: "Side-chain amide hydrogen-bonds directly with Guanine 5' and forms a water-mediated hydrogen bond to Cytosine 3 for sequence discrimination."
+            },
+            lys265: {
+                title: "Lys265 (C-terminal α5 Helix)",
+                target: "Bases of Guanine 3' & Adenine 4'",
+                desc: "Forms two direct hydrogen bonds (NZ to bases). Alanine mutation (K265A) reduces DNA binding capacity by 2- to 6-fold."
+            },
+            ser217: {
+                title: "Ser217 / Thr218 (Loop 1)",
+                target: "Bases of Guanine 7' & Guanine 8 (Minor Groove)",
+                desc: "Side-chain hydroxyls form hydrogen bonds with minor groove bases as the flexible Loop 1 inserts deeply into the DNA minor groove."
+            },
+            lys191: {
+                title: "Lys191 / Gln258 (α2 & α5 Helices)",
+                target: "Sugar-Phosphate Backbone",
+                desc: "Forms electrostatic hydrogen bonds and salt bridges with negatively charged phosphate groups to stabilize overall protein-DNA docking."
+            }
+        };
+
+        function highlightResidue(key) {
+            const data = residueDetails[key];
+            if (!data) return;
+            document.getElementById('insp-title').textContent = data.title;
+            document.getElementById('insp-target').textContent = data.target;
+            document.getElementById('insp-desc').textContent = data.desc;
+            document.getElementById('residue-badge').textContent = `Active: ${data.title}`;
+        }
+
+        function copyPyMolScript() {
+            const scriptText = document.getElementById('pymol-script').innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = scriptText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('PyMOL script copied to clipboard!');
+        }
+
+        // Scroll reveal & initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTable(sequences);
+            renderSVGTree(treeData.nj);
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('scroll-progress').style.width = scrolled + '%';
+            });
+        });
+    </script>
+</body>
+</html>
